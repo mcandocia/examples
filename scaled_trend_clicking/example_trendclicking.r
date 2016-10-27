@@ -1,9 +1,16 @@
 ##This code is an example of how one could detect similarities 
-##in time series data
-##In particular, the goal is to be able to click points on a graph and show the top 9
-##Most similar groups in terms of ratios between points (i.e., shape)
-##A more robust implementation would not use R like this, as the recursive searching here 
-##would use up a decent amount of memory
+##between groups based on trends
+##In particular, the goal is to be able to click points on a graph and show 
+##the top 9 Most similar groups in terms of ratios between points (i.e., shape)
+##A more robust implementation would not use R like this, 
+##as the recursive searching here would use up a decent amount of memory
+
+###NOTE: BIVARIATE METHOD NOT IMPLMENTED
+##For bivariate data, slope ratios would not use the constant delta_year = 1,
+##but whatever change in the variable exists. Then the two variables per 
+##change in years would become angle and magnitude. Using the angle as an 
+##additional constraint and the ratios of the magnitudes as they were before,
+##a very similar ranking alorithm can be constructed
 
 ##used for data cleaning
 require(dplyr)
