@@ -9,8 +9,6 @@
 require(dplyr)
 ##used for fast indexing
 require(data.table)
-##used to calculate euclidean distances between vector and matrix
-require(pdist)
 
 ##generate data
 years = 2008:2013
