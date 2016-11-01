@@ -38,7 +38,10 @@ company_summaries = data_indexed %>% group_by(name) %>%
 	    del2 = log(tax_rate[year==2010]/tax_rate[year==2009]),
 	    del3 = log(tax_rate[year==2011]/tax_rate[year==2010]),
 	    del4 = log(tax_rate[year==2012]/tax_rate[year==2011]),
-	    del5 = log(tax_rate[year==2013]/tax_rate[year==2012]))	
+	    del5 = log(tax_rate[year==2013]/tax_rate[year==2012]))
+	    
+##some platforms don't keep the data.table class when using summarise()
+company_summaries = data.table(company_summaries)
 
 ##indexes (and sorts) all columns of data table	    
 setkeyv(company_summaries, cols=colnames(company_summaries))	

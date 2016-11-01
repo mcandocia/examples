@@ -30,7 +30,9 @@ company_summaries = data_indexed %>% group_by(name) %>%
   dgrowth = growth_rate[-1] - growth_rate[-6],
   logratio = log(abs(dgrowth/dtax))) %>% 
   dplyr::filter(year != 2013)##last year is recycled
-
+  
+##some platforms don't keep the data.table class when using summarise()
+company_summaries = data.table(company_summaries)
 
 ##indexes (and sorts) all columns of data table	    
 setkeyv(company_summaries, cols=colnames(company_summaries))	
