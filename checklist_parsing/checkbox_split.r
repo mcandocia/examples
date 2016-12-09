@@ -4,6 +4,9 @@
 
 ##this is most often used for checkbox-type data that may be returned by an application
 ##such as Google Forms
+
+require(plyr)
+
 gather_factors_ <- function(splitted_list, na.rm=TRUE){
     if (!na.rm)
         return(unique(unlist(splitted_list)))
