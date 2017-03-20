@@ -1,6 +1,6 @@
 This is a simple function that processes a checkbox-style list field into several columns. This is most useful when processsing data from Google Forms, but it can be used in other cases.
 
-#example
+# example
 
     > test_checkbox_parsing()
       x check        val
