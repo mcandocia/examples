@@ -33,6 +33,6 @@ test_checkbox_parsing <-function(){
   df = data.frame(x = 1:5,
 		  check=c('a,b,c','a,c,d','','e','a,b'),
 		  val=rnorm(5))
-		  
-  return(checklist_split(df))
+  print(df)		  
+  return(checklist_split(df,check))
 }
