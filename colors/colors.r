@@ -22,7 +22,7 @@ bigger_text = theme(plot.title=element_text(size=rel(1.8)),
 lpng('iris_default.png')
 print(
 ggplot(iris, aes(x=Sepal.Length, y=Petal.Length, color=Species)) + 
-  geom_point() + ggtitle("Iris Sepal Length vs. Petal Length by Species, using Default ggplot Palette") +
+  geom_point(size=3.2) + ggtitle("Iris Sepal Length vs. Petal Length by Species, using Default ggplot Palette") +
   bigger_text
 )
 dev.off()
@@ -34,7 +34,7 @@ cbbPalette <- colorblind_pal()(3)
 lpng('iris_dark2.png')
 print(
 ggplot(iris, aes(x=Sepal.Length, y=Petal.Length, color=Species)) + 
-  geom_point() + ggtitle("Iris Sepal Length vs. Petal Length by Species, using Dark2 Palette") +
+  geom_point(size=3.2) + ggtitle("Iris Sepal Length vs. Petal Length by Species, using Dark2 Palette") +
   scale_color_manual(values = dark_palette) +
   bigger_text
 )
@@ -43,7 +43,7 @@ dev.off()
 lpng('iris_cb.png')
 print(
 ggplot(iris, aes(x=Sepal.Length, y=Petal.Length, color=Species)) + 
-  geom_point() + ggtitle("Iris Sepal Length vs. Petal Length by Species, using Colorblind-Friendly Palette") +
+  geom_point(size=3.2) + ggtitle("Iris Sepal Length vs. Petal Length by Species, using Colorblind-Friendly Palette") +
   scale_color_manual(values = cbbPalette) +
   bigger_text
 )
@@ -76,7 +76,8 @@ print(
 ggplot(mpg, aes(x=cty, y=hwy, color=class)) + 
   geom_jitter(alpha=0.8, size=3.2) + 
   ggtitle('Gas Mileage of Various Car Types, using Colorblind-Friendly Palette') + 
-  xlab('City MPG') + ylab('Highway MPG')+ 
+  xlab('City MPG') + ylab('Highway MPG') + 
+  scale_color_manual(values=colorblind_pal()(7)) +
   theme_dark() + theme(panel.background = element_rect(fill='#BBBBBB')) +
   bigger_text
 
@@ -98,7 +99,7 @@ dev.off()
 
 mmpg = melt(mpg, measure.vars = c('cty','hwy')) 
 
-lpng('mpg_boxplot.png')
+lpng('mpg_boxplot.png',height=520)
 print(
 ggplot(mmpg, aes(x=variable, y=value, fill=class)) + geom_boxplot() + 
   facet_grid(.~class) + theme_bw() + 
@@ -153,15 +154,6 @@ print(
     bigger_text
 )
 dev.off()
-
-
-
-
-
-
-
-
-
 
 
 #stacked bar plots color grayscale example (need to convert duplicate image to grayscale afterwards)
