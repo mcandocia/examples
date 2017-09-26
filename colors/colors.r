@@ -52,7 +52,7 @@ dev.off()
 lpng('mpg_default.png')
 print(
 ggplot(mpg, aes(x=cty, y=hwy, color=class)) + 
-         geom_jitter(alpha=0.8) + 
+         geom_jitter(alpha=0.8, size=3.2) + 
   ggtitle('Gas Mileage of Various Car Types, using Default ggplot Palette') + 
   xlab('City MPG') + ylab('Highway MPG') +
   bigger_text
@@ -62,7 +62,7 @@ dev.off()
 lpng('mpg_dark2.png')
 print(
 ggplot(mpg, aes(x=cty, y=hwy, color=class)) + 
-  geom_jitter(alpha=0.8) + 
+  geom_jitter(alpha=0.8, size=3.2) + 
   ggtitle('Gas Mileage of Various Car Types, using Dark2 Palette') + 
   xlab('City MPG') + ylab('Highway MPG') + 
   scale_color_manual(values=brewer.pal(7, 'Dark2')) +
@@ -74,11 +74,10 @@ dev.off()
 lpng('mpg_cb.png')
 print(
 ggplot(mpg, aes(x=cty, y=hwy, color=class)) + 
-  geom_jitter(alpha=0.8) + 
+  geom_jitter(alpha=0.8, size=3.2) + 
   ggtitle('Gas Mileage of Various Car Types, using Colorblind-Friendly Palette') + 
-  xlab('City MPG') + ylab('Highway MPG') + 
-  scale_color_manual(values=colorblind_pal()(7)) + 
-  theme_dark() +
+  xlab('City MPG') + ylab('Highway MPG')+ 
+  theme_dark() + theme(panel.background = element_rect(fill='#BBBBBB')) +
   bigger_text
 
 )
@@ -87,12 +86,12 @@ dev.off()
 lpng('mpg_cb_shp.png')
 print(
 ggplot(mpg, aes(x=cty, y=hwy, color=class, shape=class)) + 
-  geom_jitter(alpha=0.8) + 
+  geom_jitter(alpha=0.8, size=3.2) + 
   ggtitle('Gas Mileage of Various Car Types, using Colorblind-Friendly Palette w/Shapes') + 
   xlab('City MPG') + ylab('Highway MPG') + 
   scale_color_manual(values=colorblind_pal()(7)) + 
-  theme_dark() + 
-  scale_shape_manual(values=c(20,20,20,15,19,11,17)) +
+  theme_dark() + theme(panel.background = element_rect(fill='#BBBBBB')) +
+  scale_shape_manual(values=c(20,20,20,15,19,19,17)) +
   bigger_text
 )
 dev.off()
