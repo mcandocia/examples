@@ -22,7 +22,8 @@ from copy import copy
 #for general tracks
 allowed_fields = ['timestamp','position_lat','position_long', 'distance',
 'enhanced_altitude', 'altitude','enhanced_speed',
-                 'speed', 'heart_rate','cadence','fractional_cadence']
+                 'speed', 'heart_rate','cadence','fractional_cadence',
+                 'temperature']
 required_fields = ['timestamp', 'position_lat', 'position_long', 'altitude']
 
 
@@ -93,6 +94,22 @@ def lap_filename(output_filename):
 def start_filename(output_filename):
     return output_filename[:-4] + '_starts.csv'
 
+def get_timestamp(messages):
+    for m in messages:
+        fields = m.fields
+        for f in fields:
+            if f.name == 'timestamp':
+                return f.value
+    return None
+
+def get_event_type(messages):
+    for m in messages:
+        fields = m.fields
+        for f in fields:
+            if f.name == 'sport':
+                return f.value
+    return None
+
 def write_fitfile_to_csv(fitfile, output_file='test_output.csv', original_filename=None):
     messages = fitfile.messages
     data = []
@@ -101,8 +118,10 @@ def write_fitfile_to_csv(fitfile, output_file='test_output.csv', original_filena
     if ALT_FILENAME:
         #this should probably work, but it's possibly 
         #based on a certain version of the file/device
-        timestamp = messages[2].fields[0].value
-        event_type = messages[13].fields[2].value
+        timestamp = get_timestamp(messages)
+        event_type = get_event_type(messages)
+        if event_type is None:
+            event_type = 'other'
         output_file = event_type + '_' + timestamp.strftime('%Y-%m-%d_%H-%M-%S.csv')
     for m in messages:
         skip=False
