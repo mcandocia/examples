@@ -1,4 +1,4 @@
-#Instructions
+# Instructions
 
 All text `LIKE THIS` refers to adjustable parameters within the Python file. They can be altered to fit your needs, and they have comments explaining what they do.
 
