@@ -4,7 +4,6 @@ import re
 from bs4 import BeautifulSoup
 import bs4
 import shutil
-import zipfile
 import numpy as np 
 PI = np.pi
 import codecs
