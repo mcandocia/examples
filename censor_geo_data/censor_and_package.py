@@ -4,15 +4,10 @@ import re
 from bs4 import BeautifulSoup
 import bs4
 import shutil
-import StringIO
 import zipfile
 import numpy as np 
 PI = np.pi
 import codecs
-
-#note that I did not 
-
-
 
 #will censor the fields if applicable
 CENSOR_PARAMS = {
