@@ -7,10 +7,16 @@ import shutil
 import numpy as np 
 PI = np.pi
 import codecs
+import math
 
 #will censor the fields if applicable
 CENSOR_PARAMS = {
-	'location':True,#doesn't do anything atm
+	#IF SET TO False, OVERRIDES ALL OTHER CENSOR_PARAMS AND INSTEAD
+	#SETS FLAGS CORRESPONDING TO THE DIFFERENT RADII WITHIN WHICH
+	#A POINT IS LOCATED
+	#BEST  USED FOR DEBUGGING, BUT MAY BE USEFUL FOR OTHER PURPOSES
+	'location':True,
+	#REGULAR PARAMETERS
 	'heart_rate':False,
 	'speed':True,
 	'temperature':True,
@@ -36,6 +42,9 @@ CENSOR_PARAMS = {
 	'time':False,#if this is true, will censor all of a given field in the GPX by removal
 }
 
+#changes based on above
+OVERRIDE_CENSORSHIP = not CENSOR_PARAMS['location']
+
 #additional parameter pairs that can pass off as (latitude, longitude) ordinates
 ADDITIONAL_LATLONG = [('start_position_lat','start_position_long'),
 	('end_position_lat','end_position_long')]
@@ -59,10 +68,10 @@ SEARCH_DIRECTORIES = [
 'workout_gpx/strava_gpx/gpx_csv']
 
 #new directory to put cleaned files in
-TARGET_DIRECTORY = 'CLEAN_WORKOUTS'
+TARGET_DIRECTORY = 'FLAGGED_WORKOUTS'
 
 #name of zipped file to put TARGET_DIRECTORY's contents in
-ZIP_FILENAME = 'CLEAN_WORKOUTS.ZIP'
+ZIP_FILENAME = 'FLAGGED_WORKOUTS.ZIP'
 
 #list containing {'latitude':..., 'longitude':...,'radius':...} entries
 #by default it will be filled using CENSORFILE's data
@@ -73,7 +82,8 @@ CENSOR_COORDINATES = []
 CENSORFILE = 'censor.csv'
 
 #extra files (full path OR path relative to ROOT_DIRECTORY) that you want to copy
-ADDITIONAL_FILES_TO_COPY = ['']
+#leave empty if none
+ADDITIONAL_FILES_TO_COPY = []
 
 #will overwrite file if it already exists
 OVERWRITE = False 
@@ -109,6 +119,8 @@ def calculate_distances(points):
 #checks to see if a longitude, latitude pair is within distance of a point
 #that allows censoring
 def is_censorable(longitude, latitude):
+	if OVERRIDE_CENSORSHIP:
+		return False 
 	censor = False 
 	for cc in CENSOR_COORDINATES:
 		dist = distcalc({'lat':cc['latitude'],
@@ -118,6 +130,24 @@ def is_censorable(longitude, latitude):
 			censor = True 
 			break
 	return censor 
+
+#used when OVERRIDE_CENSORHIP=True
+def censor_indices(longitude, latitude):
+	flag_indices = []
+	for i, cc in enumerate(CENSOR_COORDINATES):
+		dist = distcalc({'lat':cc['latitude'],
+			'lon':cc['longitude']},
+			{'lat':latitude,'lon':longitude})
+		if dist <= cc['radius']:
+			flag_indices.append(i)
+	return flag_indices
+
+def flag_line(longitude, latitude):
+	flag_indices = censor_indices(longitude, latitude)
+	template = ['0' for _ in range(len(CENSOR_COORDINATES))]
+	for index in flag_indices:
+		template[index] = '1'
+	return template
 
 CSV_REGEX = re.compile(r'.*\.csv$')
 GPX_REGEX = re.compile(r'.*\.gpx$')
@@ -143,6 +173,8 @@ def transfer_csv(filename, directory):
 		with codecs.open('/'.join([TARGET_DIRECTORY, directory, filename]), 'w', encoding='utf8') as of:
 			writer = csv.writer(of)
 			header = next(reader)
+			if OVERRIDE_CENSORSHIP:
+				header += ['FLAG_%s' % str(i).zfill(int(math.log10(len(CENSOR_COORDINATES)))) for i in range(len(CENSOR_COORDINATES))]
 			writer.writerow(header)
 			if 'latitude' in header:
 				lat_index = header.index('latitude')
@@ -165,6 +197,8 @@ def transfer_csv(filename, directory):
 			#print should_censor
 			for line in reader:
 				skip_this = False
+				longitude = None
+				latitude = None
 				if not use_alternate_censoring:
 					try:
 						longitude, latitude = ( float(line[lon_index]), float(line[lat_index]) )
@@ -172,7 +206,10 @@ def transfer_csv(filename, directory):
 							if not CENSOR_PARAMS['timestamp']:
 								writer.writerow(censor_line(line, should_censor))
 						else:
-							writer.writerow(line)
+							if OVERRIDE_CENSORSHIP:
+								writer.writerow(line + flag_line(longitude, latitude))
+							else:
+								writer.writerow(line)
 					except ValueError:
 						#likely has one or both of the longitude/latitude values missing
 						#I do not personally have files like this (I think), but it is possible
@@ -201,7 +238,10 @@ def transfer_csv(filename, directory):
 						if not CENSOR_PARAMS['timestamp']:
 							writer.writerow(censor_line(line, should_censor))
 					else:
-						writer.writerow(line)
+						if OVERRIDE_CENSORSHIP and longitude is not None and latitude is not None:
+							writer.writerow(line + flag_line(longitude, latitude))
+						else:
+							writer.writerow(line)
 		print 'transfered %s' % (directory + '/' + filename)
 
 
@@ -247,7 +287,13 @@ def transfer_gpx(filename, directory):
 					pt.attrs['lat'] = CENSOR_STRING
 				if CENSOR_PARAMS.get('lon', False):
 					pt.attrs['lon'] = CENSOR_STRING 
-				
+		elif OVERRIDE_CENSORSHIP:
+			cflags = censor_indices(lon, lat)
+			for flag in cflags:
+				flag_tag = soup.new_tag('rflag')
+				flag_tag.attrs['index'] = flag 
+				pt.append(flag_tag)
+
 	with codecs.open('/'.join([TARGET_DIRECTORY, directory, filename]), 'w', encoding='utf8') as f:
 		try:
 			f.write(soup.prettify())
