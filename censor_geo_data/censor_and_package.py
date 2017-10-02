@@ -71,6 +71,7 @@ SEARCH_DIRECTORIES = [
 TARGET_DIRECTORY = 'FLAGGED_WORKOUTS'
 
 #name of zipped file to put TARGET_DIRECTORY's contents in
+#if ZIP_FILENAME=None, then no zipped file will be made
 ZIP_FILENAME = 'FLAGGED_WORKOUTS.ZIP'
 
 #list containing {'latitude':..., 'longitude':...,'radius':...} entries
@@ -337,8 +338,11 @@ def main():
 			transfer_gpx(gf, directory)
 	for file in ADDITIONAL_FILES_TO_COPY:
 		shutil.copyfile(file, TARGET_DIRECTORY + '/' + file)
-	zip_target_directory()
-	print 'made censored files and zipped them!'
+	if ZIP_FILENAME is not None:
+		zip_target_directory()
+		print 'made censored files and zipped them!'
+	else:
+		print 'made censored files!'
 
 
 if __name__=='__main__':
