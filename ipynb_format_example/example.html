@@ -1,0 +1,179 @@
+<link rel="stylesheet" href="http://maxcandocia.com/static/css/ipynb.css"/>
+
+
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Example-iPython-Notebook">Example iPython Notebook<a class="anchor-link" href="#Example-iPython-Notebook">&#182;</a></h1><p>Below is a simple example of an iPython notebook embedded in HTML</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="k">def</span> <span class="nf">empty_counter_warning</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">inner_func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">Counter</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;You are using an empty counter object...&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">inner_func</span>
+
+<span class="k">class</span> <span class="nc">DotCounter</span><span class="p">(</span><span class="n">Counter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    class that allows counter objects to have elements accessed by dots</span>
+<span class="sd">    rather than just brackets</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__getattr__</span> <span class="o">=</span> <span class="n">Counter</span><span class="o">.</span><span class="n">__getitem__</span>
+    <span class="n">__setattr__</span> <span class="o">=</span> <span class="n">Counter</span><span class="o">.</span><span class="n">__setitem__</span>
+    <span class="n">__delattr__</span> <span class="o">=</span> <span class="n">Counter</span><span class="o">.</span><span class="n">__delitem__</span>
+    
+    <span class="nd">@empty_counter_warning</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    
+    
+<span class="n">no_stuff</span> <span class="o">=</span> <span class="n">DotCounter</span><span class="p">()</span>
+<span class="n">stuff</span> <span class="o">=</span> <span class="n">DotCounter</span><span class="p">({</span><span class="s1">&#39;apple&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="s1">&#39;orange&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="k">print</span> <span class="n">no_stuff</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>{}
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/usr/local/lib/python2.7/dist-packages/ipykernel_launcher.py:10: UserWarning: You are using an empty counter object...
+  # Remove the CWD from sys.path while we load stuff.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="c1">#just printing out a few things</span>
+<span class="k">print</span> <span class="n">stuff</span><span class="o">.</span><span class="n">apple</span>
+<span class="n">stuff</span><span class="o">.</span><span class="n">orange</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="k">print</span> <span class="n">stuff</span><span class="o">.</span><span class="n">banana</span> <span class="o">+</span> <span class="mi">2</span>
+<span class="n">stuff</span><span class="o">.</span><span class="n">lemon</span><span class="o">+=</span><span class="mi">1</span>
+<span class="k">print</span> <span class="n">stuff</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>2
+2
+{
+    &#34;orange&#34;: 2, 
+    &#34;lemon&#34;: 1, 
+    &#34;apple&#34;: 2
+}
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span class="c1">#force an error</span>
+<span class="mi">1</span> <span class="o">+</span> <span class="s1">&#39;a&#39;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-25-f794df300990&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-red-fg">#force an error</span>
+<span class="ansi-green-fg">----&gt; 2</span><span class="ansi-red-fg"> </span><span class="ansi-cyan-fg">1</span> <span class="ansi-blue-fg">+</span> <span class="ansi-blue-fg">&#39;a&#39;</span>
+
+<span class="ansi-red-fg">TypeError</span>: unsupported operand type(s) for +: &#39;int&#39; and &#39;str&#39;</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+ 
+

@@ -1,0 +1,80 @@
+blockquote{
+padding-left:4px;
+border-left:2px solid #505050;
+}
+div#notebook{
+margin-top:50px;
+margin-bottom:100px;
+}
+div.cell{
+max-width:60em;
+margin-left:auto;
+margin-right:auto;
+
+}
+div.input_prompt, div.output_prompt{
+margin-left:-11ex;
+}
+div.input, div.output_wrapper{
+margin-top:1em;
+margin-bottom:1em;
+}
+div.text_cell{
+margin-top:-2px;
+margin-bottom:-2px;
+padding-top:2px;
+padding-bottom:2px;
+border-collapse:collapse;
+border-top:none;
+border-bottom:none;
+}
+
+/*hide anchor links that are generated for headers*/
+.anchor-link{display:none;}
+
+/*color styles*/
+
+/*box around content*/
+div.hl-ipython2{
+background-color:#EEE;
+padding:4px;
+border-width:1px;
+border-color:#BBB;
+border-style:solid;
+}
+/*imports*/
+span.kn{color:forestgreen;font-weight:bold;}
+/*multi-line text*/
+span.sd{color:DarkRed;}
+/*"self" and boolean args*/
+span.bp{color:blue;}
+/*comment*/
+span.c1{color:forestgreen;}
+/*function names*/
+span.k{color:#2A3;font-weight:bold;}
+/*parentheses and brackets and commas*/
+span.p{color:#111;}
+/*regular string*/
+span.s1{color:DarkRed;}
+/*number*/
+span.mi{color:#3A4;}
+/*function name*/
+span.nf{color:blue;}
+/*decorator*/
+span.nd{color:#A18;}
+/*., *, +, =, +=, etc.*/
+span.o{}
+/*arguments*/
+span.n{}
+
+/*style for code from errors*/
+span.ansi-red-fg{color:#C22;}
+span.ansi-green-fg{color:#2C2;}
+span.ansi-cyan-fg{color:cyan;}
+span.ansi-blue-fg{color:blue;}
+span.ansi-green-intense-fg{color:#2C2;}
+
+/*also used in warnings*/
+div.output_stderr{
+background-color:#DBB;
+}
