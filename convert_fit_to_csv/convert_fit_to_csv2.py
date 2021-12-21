@@ -119,10 +119,11 @@ def write_fitfile_to_csv(fitfile, output_file='test_output.csv', original_filena
         #this should probably work, but it's possibly 
         #based on a certain version of the file/device
         timestamp = get_timestamp(messages)
+        timestamp = timestamp.strftime('%Y-%m-%d_%H-%M-%S.csv') if timestamp else '0000-00-00_00-00-00.csv'
         event_type = get_event_type(messages)
         if event_type is None:
             event_type = 'other'
-        output_file = event_type + '_' + timestamp.strftime('%Y-%m-%d_%H-%M-%S.csv')
+        output_file = event_type + '_' + timestamp
     for m in messages:
         skip=False
         skip_lap = False 
@@ -135,6 +136,7 @@ def write_fitfile_to_csv(fitfile, output_file='test_output.csv', original_filena
         for field in fields:
             if field.name in all_allowed_fields:
                 if field.name=='timestamp':
+                  if field.value:
                     mdata[field.name] = UTC.localize(field.value).astimezone(CST)
                 else:
                     mdata[field.name] = field.value
